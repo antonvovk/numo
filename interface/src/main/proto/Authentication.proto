@@ -7,7 +7,7 @@ option java_package = "com.numo.proto";
 option java_outer_classname = "AuthenticationProto";
 
 service AuthenticationService {
-  rpc SendConfirmationCode (SendConfirmationRequest) returns (SendConfirmationResponse) {
+  rpc SendConfirmationCode (SendConfirmationCodeRequest) returns (SendConfirmationCodeResponse) {
   }
   rpc VerifyPhoneNumber (VerifyPhoneNumberRequest) returns (VerifyPhoneNumberResponse) {
   }
@@ -17,11 +17,11 @@ service AuthenticationService {
   }
 }
 
-message SendConfirmationRequest {
+message SendConfirmationCodeRequest {
   string phoneNumber = 1;
 }
 
-message SendConfirmationResponse {
+message SendConfirmationCodeResponse {
 }
 
 message VerifyPhoneNumberRequest {
@@ -49,6 +49,11 @@ message SignInRequest {
 }
 
 message SignInResponse {
+  string accessToken = 1;
+  uint64 expiresIn = 2;
+  string tokenType = 3;
+  string refreshToken = 4;
+  string idToken = 5;
 }
 
 enum Gender {
