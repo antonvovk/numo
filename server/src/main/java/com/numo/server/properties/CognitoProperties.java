@@ -25,4 +25,7 @@ public class CognitoProperties {
 
     @NonNull
     private final String issuer;
+
+    @NonNull
+    private final String jwk;
 }

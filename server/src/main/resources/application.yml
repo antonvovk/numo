@@ -3,3 +3,8 @@ cognito:
   client-id: ${COGNITO_CLIENT_ID}
   client-secret: ${COGNITO_CLIENT_SECRET}
   issuer: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_USER_POOL_ID}
+  jwk: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_USER_POOL_ID}/.well-known/jwks.json
+
+logging:
+  level:
+    org.springframework.security: TRACE
