@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package com.numo.proto;
+
+option java_multiple_files = true;
+option java_package = "com.numo.proto";
+option java_outer_classname = "UserProto";
+
+service UserService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+  }
+}
+
+message GetUserRequest {
+}
+
+message GetUserResponse {
+  string email = 1;
+  string name = 2;
+  Gender gender = 3;
+  uint32 age = 4;
+  uint32 weight = 5;
+  PhysicalFitness physicalFitness = 6;
+}
+
+enum Gender {
+  MALE = 0;
+  FEMALE = 1;
+}
+
+enum PhysicalFitness {
+  BEGINNER = 0;
+  MODERATE = 1;
+  EXPERIENCED = 2;
+}

@@ -16,4 +16,5 @@ public class CognitoProperties {
     private final String userPoolId;
     private final String clientId;
     private final String clientSecret;
+    private final String issuer;
 }
