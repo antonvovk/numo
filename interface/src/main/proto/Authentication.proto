@@ -7,44 +7,32 @@ option java_package = "com.numo.proto";
 option java_outer_classname = "AuthenticationProto";
 
 service AuthenticationService {
-  rpc SendConfirmationCode (SendConfirmationCodeRequest) returns (SendConfirmationCodeResponse) {
-  }
-  rpc VerifyPhoneNumber (VerifyPhoneNumberRequest) returns (VerifyPhoneNumberResponse) {
-  }
   rpc SignUp (SignUpRequest) returns (SignUpResponse) {
+  }
+  rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
   }
   rpc SignIn (SignInRequest) returns (SignInResponse) {
   }
 }
 
-message SendConfirmationCodeRequest {
-  string phoneNumber = 1;
-}
-
-message SendConfirmationCodeResponse {
-}
-
-message VerifyPhoneNumberRequest {
-  string phoneNumber = 1;
-  string confirmationCode = 2;
-}
-
-message VerifyPhoneNumberResponse {
-}
-
 message SignUpRequest {
-  string phoneNumber = 1;
+  string email = 1;
   string password = 2;
-  Gender gender = 3;
-  uint32 weight = 4;
-  PhysicalFitness physicalFitness = 5;
 }
 
 message SignUpResponse {
 }
 
+message VerifyEmailRequest {
+  string email = 1;
+  string confirmationCode = 2;
+}
+
+message VerifyEmailResponse {
+}
+
 message SignInRequest {
-  string phoneNumber = 1;
+  string email = 1;
   string password = 2;
 }
 
@@ -54,15 +42,4 @@ message SignInResponse {
   string tokenType = 3;
   string refreshToken = 4;
   string idToken = 5;
-}
-
-enum Gender {
-  MALE = 0;
-  FEMALE = 1;
-}
-
-enum PhysicalFitness {
-  BEGINNER = 0;
-  MODERATE = 1;
-  EXPERIENCED = 2;
 }

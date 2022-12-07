@@ -4,11 +4,9 @@ import com.numo.proto.*;
 
 public interface CognitoClient {
 
-    SendConfirmationCodeResponse sendConfirmationCode(SendConfirmationCodeRequest request);
-
-    VerifyPhoneNumberResponse verifyPhoneNumber(VerifyPhoneNumberRequest request);
-
     SignUpResponse signUp(SignUpRequest request);
+
+    VerifyEmailResponse verifyEmail(VerifyEmailRequest request);
 
     SignInResponse signIn(SignInRequest request);
 }

@@ -13,20 +13,14 @@ public class AuthenticationServiceImpl extends AuthenticationServiceGrpc.Authent
     private final CognitoClient cognitoClient;
 
     @Override
-    public void sendConfirmationCode(SendConfirmationCodeRequest request, StreamObserver<SendConfirmationCodeResponse> responseObserver) {
-        responseObserver.onNext(cognitoClient.sendConfirmationCode(request));
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    public void verifyPhoneNumber(VerifyPhoneNumberRequest request, StreamObserver<VerifyPhoneNumberResponse> responseObserver) {
-        responseObserver.onNext(cognitoClient.verifyPhoneNumber(request));
-        responseObserver.onCompleted();
-    }
-
-    @Override
     public void signUp(SignUpRequest request, StreamObserver<SignUpResponse> responseObserver) {
         responseObserver.onNext(cognitoClient.signUp(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void verifyEmail(VerifyEmailRequest request, StreamObserver<VerifyEmailResponse> responseObserver) {
+        responseObserver.onNext(cognitoClient.verifyEmail(request));
         responseObserver.onCompleted();
     }
 
