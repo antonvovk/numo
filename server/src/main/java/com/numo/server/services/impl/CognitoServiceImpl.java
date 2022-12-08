@@ -92,6 +92,32 @@ public class CognitoServiceImpl implements CognitoService {
                 .build();
     }
 
+    @Override
+    public com.numo.proto.ForgotPasswordResponse forgotPassword(com.numo.proto.ForgotPasswordRequest request) {
+        final ForgotPasswordRequest forgotPasswordRequest = ForgotPasswordRequest.builder()
+                .clientId(properties.getClientId())
+                .secretHash(calculateSecretHash(request.getEmail()))
+                .username(request.getEmail())
+                .build();
+        final ForgotPasswordResponse response = client.forgotPassword(forgotPasswordRequest);
+        log.info("ForgotPasswordResponse: {}", response);
+        return com.numo.proto.ForgotPasswordResponse.newBuilder().build();
+    }
+
+    @Override
+    public com.numo.proto.ConfirmForgotPasswordResponse confirmForgotPassword(com.numo.proto.ConfirmForgotPasswordRequest request) {
+        final ConfirmForgotPasswordRequest confirmForgotPasswordRequest = ConfirmForgotPasswordRequest.builder()
+                .clientId(properties.getClientId())
+                .secretHash(calculateSecretHash(request.getEmail()))
+                .username(request.getEmail())
+                .confirmationCode(request.getConfirmationCode())
+                .password(request.getPassword())
+                .build();
+        final ConfirmForgotPasswordResponse response = client.confirmForgotPassword(confirmForgotPasswordRequest);
+        log.info("ConfirmForgotPasswordResponse: {}", response);
+        return com.numo.proto.ConfirmForgotPasswordResponse.newBuilder().build();
+    }
+
     private String calculateSecretHash(String username) {
         final SecretKeySpec key = new SecretKeySpec(properties.getClientSecret().getBytes(UTF_8), HMAC_SHA256_ALGORITHM);
         try {

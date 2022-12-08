@@ -13,6 +13,10 @@ service AuthenticationService {
   }
   rpc SignIn (SignInRequest) returns (SignInResponse) {
   }
+  rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse) {
+  }
+  rpc ConfirmForgotPassword (ConfirmForgotPasswordRequest) returns (ConfirmForgotPasswordResponse) {
+  }
 }
 
 message SignUpRequest {
@@ -41,4 +45,20 @@ message SignInResponse {
   uint64 expiresIn = 2;
   string tokenType = 3;
   string refreshToken = 4;
+}
+
+message ForgotPasswordRequest {
+  string email = 1;
+}
+
+message ForgotPasswordResponse {
+}
+
+message ConfirmForgotPasswordRequest {
+  string email = 1;
+  string confirmationCode = 2;
+  string password = 3;
+}
+
+message ConfirmForgotPasswordResponse {
 }

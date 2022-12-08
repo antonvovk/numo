@@ -9,4 +9,8 @@ public interface CognitoService {
     VerifyEmailResponse verifyEmail(VerifyEmailRequest request);
 
     SignInResponse signIn(SignInRequest request);
+
+    ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request);
+
+    ConfirmForgotPasswordResponse confirmForgotPassword(ConfirmForgotPasswordRequest request);
 }

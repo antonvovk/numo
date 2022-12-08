@@ -29,4 +29,16 @@ public class GrpcAuthenticationService extends AuthenticationServiceGrpc.Authent
         responseObserver.onNext(cognitoService.signIn(request));
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void forgotPassword(ForgotPasswordRequest request, StreamObserver<ForgotPasswordResponse> responseObserver) {
+        responseObserver.onNext(cognitoService.forgotPassword(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void confirmForgotPassword(ConfirmForgotPasswordRequest request, StreamObserver<ConfirmForgotPasswordResponse> responseObserver) {
+        responseObserver.onNext(cognitoService.confirmForgotPassword(request));
+        responseObserver.onCompleted();
+    }
 }
