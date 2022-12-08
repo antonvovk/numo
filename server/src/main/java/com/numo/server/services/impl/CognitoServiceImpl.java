@@ -1,9 +1,6 @@
 package com.numo.server.services.impl;
 
-import com.numo.proto.SignInRequest;
-import com.numo.proto.SignInResponse;
-import com.numo.proto.VerifyEmailRequest;
-import com.numo.proto.VerifyEmailResponse;
+import com.numo.proto.*;
 import com.numo.server.models.CreateUser;
 import com.numo.server.properties.CognitoProperties;
 import com.numo.server.services.CognitoService;
@@ -12,6 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmForgotPasswordRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmForgotPasswordResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ForgotPasswordRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ForgotPasswordResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ResendConfirmationCodeRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ResendConfirmationCodeResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 import javax.crypto.Mac;
@@ -123,11 +128,37 @@ public class CognitoServiceImpl implements CognitoService {
                 .secretHash(calculateSecretHash(request.getEmail()))
                 .username(request.getEmail())
                 .confirmationCode(request.getConfirmationCode())
-                .password(request.getPassword())
+                .password(request.getNewPassword())
                 .build();
         final ConfirmForgotPasswordResponse response = client.confirmForgotPassword(confirmForgotPasswordRequest);
         log.info("ConfirmForgotPasswordResponse: {}", response);
         return com.numo.proto.ConfirmForgotPasswordResponse.newBuilder().build();
+    }
+
+    @Override
+    public com.numo.proto.ChangePasswordResponse changePassword(com.numo.proto.ChangePasswordRequest request) {
+        final ForgotPasswordRequest forgotPasswordRequest = ForgotPasswordRequest.builder()
+                .clientId(properties.getClientId())
+                .secretHash(calculateSecretHash(request.getEmail()))
+                .username(request.getEmail())
+                .build();
+        final ForgotPasswordResponse response = client.forgotPassword(forgotPasswordRequest);
+        log.info("ForgotPasswordResponse: {}", response);
+        return com.numo.proto.ChangePasswordResponse.newBuilder().build();
+    }
+
+    @Override
+    public ConfirmChangePasswordResponse confirmChangePassword(ConfirmChangePasswordRequest request) {
+        final ConfirmForgotPasswordRequest confirmForgotPasswordRequest = ConfirmForgotPasswordRequest.builder()
+                .clientId(properties.getClientId())
+                .secretHash(calculateSecretHash(request.getEmail()))
+                .username(request.getEmail())
+                .confirmationCode(request.getConfirmationCode())
+                .password(request.getNewPassword())
+                .build();
+        final ConfirmForgotPasswordResponse response = client.confirmForgotPassword(confirmForgotPasswordRequest);
+        log.info("ConfirmForgotPasswordResponse: {}", response);
+        return com.numo.proto.ConfirmChangePasswordResponse.newBuilder().build();
     }
 
     private String calculateSecretHash(String username) {

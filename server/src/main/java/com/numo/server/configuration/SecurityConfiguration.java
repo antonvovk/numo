@@ -30,9 +30,12 @@ public class SecurityConfiguration {
         final ManualGrpcSecurityMetadataSource source = new ManualGrpcSecurityMetadataSource();
         source.set(AuthenticationServiceGrpc.getSignUpMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getVerifyEmailMethod(), AccessPredicate.permitAll());
+        source.set(AuthenticationServiceGrpc.getResendConfirmationCodeMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getSignInMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getForgotPasswordMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getConfirmForgotPasswordMethod(), AccessPredicate.permitAll());
+        source.set(AuthenticationServiceGrpc.getChangePasswordMethod(), AccessPredicate.fullyAuthenticated());
+        source.set(AuthenticationServiceGrpc.getConfirmChangePasswordMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getGetUserMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getUpdateUserMethod(), AccessPredicate.fullyAuthenticated());
         source.setDefault(AccessPredicate.denyAll());

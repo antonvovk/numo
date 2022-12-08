@@ -15,4 +15,8 @@ public interface CognitoService {
     ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request);
 
     ConfirmForgotPasswordResponse confirmForgotPassword(ConfirmForgotPasswordRequest request);
+
+    ChangePasswordResponse changePassword(ChangePasswordRequest request);
+
+    ConfirmChangePasswordResponse confirmChangePassword(ConfirmChangePasswordRequest request);
 }

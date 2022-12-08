@@ -19,6 +19,10 @@ service AuthenticationService {
   }
   rpc ConfirmForgotPassword (ConfirmForgotPasswordRequest) returns (ConfirmForgotPasswordResponse) {
   }
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse) {
+  }
+  rpc ConfirmChangePassword (ConfirmChangePasswordRequest) returns (ConfirmChangePasswordResponse) {
+  }
 }
 
 message SignUpRequest {
@@ -66,8 +70,24 @@ message ForgotPasswordResponse {
 message ConfirmForgotPasswordRequest {
   string email = 1;
   string confirmationCode = 2;
-  string password = 3;
+  string newPassword = 3;
 }
 
 message ConfirmForgotPasswordResponse {
+}
+
+message ChangePasswordRequest {
+  string email = 1;
+}
+
+message ChangePasswordResponse {
+}
+
+message ConfirmChangePasswordRequest {
+  string email = 1;
+  string confirmationCode = 2;
+  string newPassword = 3;
+}
+
+message ConfirmChangePasswordResponse {
 }
