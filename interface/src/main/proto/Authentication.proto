@@ -11,6 +11,8 @@ service AuthenticationService {
   }
   rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
   }
+  rpc ResendConfirmationCode (ResendConfirmationCodeRequest) returns (ResendConfirmationCodeResponse) {
+  }
   rpc SignIn (SignInRequest) returns (SignInResponse) {
   }
   rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse) {
@@ -33,6 +35,13 @@ message VerifyEmailRequest {
 }
 
 message VerifyEmailResponse {
+}
+
+message ResendConfirmationCodeRequest {
+  string email = 1;
+}
+
+message ResendConfirmationCodeResponse {
 }
 
 message SignInRequest {

@@ -70,6 +70,18 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     @Override
+    public com.numo.proto.ResendConfirmationCodeResponse resendConfirmationCode(com.numo.proto.ResendConfirmationCodeRequest request) {
+        final ResendConfirmationCodeRequest resendConfirmationCodeRequest = ResendConfirmationCodeRequest.builder()
+                .clientId(properties.getClientId())
+                .secretHash(calculateSecretHash(request.getEmail()))
+                .username(request.getEmail())
+                .build();
+        final ResendConfirmationCodeResponse response = client.resendConfirmationCode(resendConfirmationCodeRequest);
+        log.info("ResendConfirmationCodeResponse: {}", response);
+        return com.numo.proto.ResendConfirmationCodeResponse.newBuilder().build();
+    }
+
+    @Override
     public SignInResponse signIn(SignInRequest request) {
         final Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", request.getEmail());

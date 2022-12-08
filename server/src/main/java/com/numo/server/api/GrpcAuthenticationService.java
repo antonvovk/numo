@@ -25,6 +25,12 @@ public class GrpcAuthenticationService extends AuthenticationServiceGrpc.Authent
     }
 
     @Override
+    public void resendConfirmationCode(ResendConfirmationCodeRequest request, StreamObserver<ResendConfirmationCodeResponse> responseObserver) {
+        responseObserver.onNext(cognitoService.resendConfirmationCode(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void signIn(SignInRequest request, StreamObserver<SignInResponse> responseObserver) {
         responseObserver.onNext(cognitoService.signIn(request));
         responseObserver.onCompleted();
