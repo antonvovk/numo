@@ -41,5 +41,4 @@ message SignInResponse {
   uint64 expiresIn = 2;
   string tokenType = 3;
   string refreshToken = 4;
-  string idToken = 5;
 }

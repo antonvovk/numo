@@ -10,7 +10,7 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 public class CognitoConfiguration {
 
     @Bean
-    public CognitoIdentityProviderClient cognitoIdentityProviderClient() {
+    CognitoIdentityProviderClient cognitoIdentityProviderClient() {
         return CognitoIdentityProviderClient.builder()
                 .credentialsProvider(ProfileCredentialsProvider.create())
                 .region(Region.EU_NORTH_1)

@@ -1,32 +1,32 @@
-package com.numo.server.services;
+package com.numo.server.api;
 
 import com.numo.proto.*;
-import com.numo.server.integration.CognitoClient;
+import com.numo.server.services.CognitoService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 @RequiredArgsConstructor
 @GrpcService
-public class AuthenticationServiceImpl extends AuthenticationServiceGrpc.AuthenticationServiceImplBase {
+public class GrpcAuthenticationService extends AuthenticationServiceGrpc.AuthenticationServiceImplBase {
 
-    private final CognitoClient cognitoClient;
+    private final CognitoService cognitoService;
 
     @Override
     public void signUp(SignUpRequest request, StreamObserver<SignUpResponse> responseObserver) {
-        responseObserver.onNext(cognitoClient.signUp(request));
+        responseObserver.onNext(cognitoService.signUp(request));
         responseObserver.onCompleted();
     }
 
     @Override
     public void verifyEmail(VerifyEmailRequest request, StreamObserver<VerifyEmailResponse> responseObserver) {
-        responseObserver.onNext(cognitoClient.verifyEmail(request));
+        responseObserver.onNext(cognitoService.verifyEmail(request));
         responseObserver.onCompleted();
     }
 
     @Override
     public void signIn(SignInRequest request, StreamObserver<SignInResponse> responseObserver) {
-        responseObserver.onNext(cognitoClient.signIn(request));
+        responseObserver.onNext(cognitoService.signIn(request));
         responseObserver.onCompleted();
     }
 }

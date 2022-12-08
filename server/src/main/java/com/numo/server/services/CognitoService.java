@@ -1,8 +1,8 @@
-package com.numo.server.integration;
+package com.numo.server.services;
 
 import com.numo.proto.*;
 
-public interface CognitoClient {
+public interface CognitoService {
 
     SignUpResponse signUp(SignUpRequest request);
 
