@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    username: ${DATASOURCE_DEV_USER}
+    password: ${DATASOURCE_DEV_PASSWORD}
+    url: ${DATASOURCE_DEV_URL}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+cognito:
+  user-pool-id: ${COGNITO_DEV_USER_POOL_ID}
+  client-id: ${COGNITO_DEV_CLIENT_ID}
+  client-secret: ${COGNITO_DEV_CLIENT_SECRET}
+  issuer: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_DEV_USER_POOL_ID}
+  jwk: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_DEV_USER_POOL_ID}/.well-known/jwks.json
+
+logging:
+  level:
+    org.springframework.security: TRACE
