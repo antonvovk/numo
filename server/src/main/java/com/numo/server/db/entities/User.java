@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user", indexes = @Index(name = "IDX_EMAIL", columnList = "email", unique = true))
+@Table(name = "app_user", indexes = @Index(name = "IDX_EMAIL", columnList = "email", unique = true))
 @Getter
 @Setter
 @NoArgsConstructor

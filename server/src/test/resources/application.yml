@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: numo
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    url: jdbc:h2:mem:numo;MODE=MySQL;
+
+  jpa:
+    database: h2
+    open-in-view: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+cognito:
+  user-pool-id: dummy
+  client-id: dummy
+  client-secret: dummy
+  issuer: dummy
+  jwk: file:///dummy
