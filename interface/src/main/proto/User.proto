@@ -43,12 +43,14 @@ message UpdateUserResponse {
 }
 
 enum Gender {
-  MALE = 0;
-  FEMALE = 1;
+  GENDER_UNSPECIFIED = 0;
+  MALE = 1;
+  FEMALE = 2;
 }
 
 enum PhysicalFitness {
-  BEGINNER = 0;
-  MODERATE = 1;
-  EXPERIENCED = 2;
+  PHYSICAL_FITNESS_UNSPECIFIED = 0;
+  BEGINNER = 1;
+  MODERATE = 2;
+  EXPERIENCED = 3;
 }

@@ -30,9 +30,10 @@ public class User {
     @Builder.Default
     private String name = "Unverified User";
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Builder.Default
+    private Gender gender = Gender.GENDER_UNSPECIFIED;
 
     @Column(name = "age")
     private Integer age;
@@ -43,7 +44,7 @@ public class User {
     @Column(name = "physical_fitness", nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private PhysicalFitness physicalFitness = PhysicalFitness.BEGINNER;
+    private PhysicalFitness physicalFitness = PhysicalFitness.PHYSICAL_FITNESS_UNSPECIFIED;
 
     @Override
     public boolean equals(Object o) {
