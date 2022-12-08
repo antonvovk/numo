@@ -7,18 +7,20 @@ import com.numo.server.db.entities.User;
 import com.numo.server.models.UpdateUser;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class UserMapper {
 
     public GetUserResponse mapToGetUserResponse(User from) {
-        return GetUserResponse.newBuilder()
+        final GetUserResponse.Builder builder = GetUserResponse.newBuilder()
                 .setEmail(from.getEmail())
                 .setName(from.getName())
-                .setGender(from.getGender())
-                .setAge(from.getAge())
-                .setWeight(from.getWeight())
-                .setPhysicalFitness(from.getPhysicalFitness())
-                .build();
+                .setPhysicalFitness(from.getPhysicalFitness());
+        Optional.ofNullable(from.getGender()).ifPresent(builder::setGender);
+        Optional.ofNullable(from.getAge()).ifPresent(builder::setAge);
+        Optional.ofNullable(from.getWeight()).ifPresent(builder::setWeight);
+        return builder.build();
     }
 
     public UpdateUserResponse mapToUpdateUserResponse(User from) {
