@@ -9,12 +9,31 @@ option java_outer_classname = "UserProto";
 service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserResponse) {
   }
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+  }
 }
 
 message GetUserRequest {
 }
 
 message GetUserResponse {
+  string email = 1;
+  string name = 2;
+  Gender gender = 3;
+  uint32 age = 4;
+  uint32 weight = 5;
+  PhysicalFitness physicalFitness = 6;
+}
+
+message UpdateUserRequest {
+  string name = 1;
+  Gender gender = 2;
+  uint32 age = 3;
+  uint32 weight = 4;
+  PhysicalFitness physicalFitness = 5;
+}
+
+message UpdateUserResponse {
   string email = 1;
   string name = 2;
   Gender gender = 3;
