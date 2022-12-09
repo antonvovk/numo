@@ -32,4 +32,18 @@ public class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
         responseObserver.onNext(userMapper.mapToUpdateUserResponse(user));
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void changeProfileImage(ChangeProfileImageRequest request, StreamObserver<ChangeProfileImageResponse> responseObserver) {
+        final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String imageType = request.getMetadata().getType();
+        final byte[] image = request.getFile().getContent().toByteArray();
+
+        final String profileImageUrl = userService.changeProfileImage(userId, imageType, image);
+        final ChangeProfileImageResponse response = ChangeProfileImageResponse.newBuilder()
+                .setProfileImageUrl(profileImageUrl)
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 }

@@ -15,4 +15,6 @@ public interface UserService {
     User create(CreateUser request);
 
     User update(UpdateUser request);
+
+    String changeProfileImage(String id, String imageType, byte[] image);
 }

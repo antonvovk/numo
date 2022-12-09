@@ -11,6 +11,8 @@ service UserService {
   }
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
   }
+  rpc ChangeProfileImage (ChangeProfileImageRequest) returns (ChangeProfileImageResponse) {
+  }
 }
 
 message GetUserRequest {
@@ -23,6 +25,7 @@ message GetUserResponse {
   uint32 age = 4;
   uint32 weight = 5;
   PhysicalFitness physicalFitness = 6;
+  string profileImageUrl = 7;
 }
 
 message UpdateUserRequest {
@@ -40,6 +43,24 @@ message UpdateUserResponse {
   uint32 age = 4;
   uint32 weight = 5;
   PhysicalFitness physicalFitness = 6;
+  string profileImageUrl = 7;
+}
+
+message ChangeProfileImageRequest {
+  MetaData metadata = 1;
+  File file = 2;
+}
+
+message ChangeProfileImageResponse {
+  string profileImageUrl = 1;
+}
+
+message MetaData {
+  string type = 1;
+}
+
+message File {
+  bytes content = 1;
 }
 
 enum Gender {

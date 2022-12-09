@@ -39,6 +39,7 @@ public class SecurityConfiguration {
         source.set(AuthenticationServiceGrpc.getConfirmChangePasswordMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getGetUserMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getUpdateUserMethod(), AccessPredicate.fullyAuthenticated());
+        source.set(UserServiceGrpc.getChangeProfileImageMethod(), AccessPredicate.fullyAuthenticated());
         source.setDefault(AccessPredicate.denyAll());
         return source;
     }

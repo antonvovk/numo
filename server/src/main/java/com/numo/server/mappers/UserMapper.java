@@ -20,18 +20,20 @@ public class UserMapper {
         Optional.ofNullable(from.getGender()).ifPresent(builder::setGender);
         Optional.ofNullable(from.getAge()).ifPresent(builder::setAge);
         Optional.ofNullable(from.getWeight()).ifPresent(builder::setWeight);
+        Optional.ofNullable(from.getProfileImageUrl()).ifPresent(builder::setProfileImageUrl);
         return builder.build();
     }
 
     public UpdateUserResponse mapToUpdateUserResponse(User from) {
-        return UpdateUserResponse.newBuilder()
+        final UpdateUserResponse.Builder builder = UpdateUserResponse.newBuilder()
                 .setEmail(from.getEmail())
                 .setName(from.getName())
-                .setGender(from.getGender())
-                .setAge(from.getAge())
-                .setWeight(from.getWeight())
-                .setPhysicalFitness(from.getPhysicalFitness())
-                .build();
+                .setPhysicalFitness(from.getPhysicalFitness());
+        Optional.ofNullable(from.getGender()).ifPresent(builder::setGender);
+        Optional.ofNullable(from.getAge()).ifPresent(builder::setAge);
+        Optional.ofNullable(from.getWeight()).ifPresent(builder::setWeight);
+        Optional.ofNullable(from.getProfileImageUrl()).ifPresent(builder::setProfileImageUrl);
+        return builder.build();
     }
 
     public UpdateUser mapToUpdateUser(UpdateUserRequest from) {

@@ -46,6 +46,9 @@ public class User {
     @Builder.Default
     private PhysicalFitness physicalFitness = PhysicalFitness.PHYSICAL_FITNESS_UNSPECIFIED;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

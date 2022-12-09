@@ -19,6 +19,10 @@ cognito:
   issuer: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_DEV_USER_POOL_ID}
   jwk: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_DEV_USER_POOL_ID}/.well-known/jwks.json
 
+s3:
+  bucket-name: ${S3_DEV_BUCKET_NAME}
+  access-point-url: https://${S3_DEV_BUCKET_NAME}.s3.eu-north-1.amazonaws.com
+
 logging:
   level:
     org.springframework.security: TRACE
