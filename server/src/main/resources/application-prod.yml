@@ -22,3 +22,4 @@ s3:
 logging:
   file:
     name: numo.log
+    path: ${HOME}
