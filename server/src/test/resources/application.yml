@@ -21,3 +21,7 @@ cognito:
   client-secret: dummy
   issuer: dummy
   jwk: file:///dummy
+
+s3:
+  bucket-name: dummy
+  access-point-url: dummy
