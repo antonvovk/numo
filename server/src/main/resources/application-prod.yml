@@ -18,3 +18,7 @@ cognito:
 s3:
   bucket-name: ${S3_PROD_BUCKET_NAME}
   access-point-url: https://${S3_PROD_BUCKET_NAME}.s3.eu-north-1.amazonaws.com
+
+logging:
+  file:
+    name: numo.log

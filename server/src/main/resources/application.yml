@@ -11,3 +11,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
+
+grpc:
+  server:
+    security:
+      enabled: true
+      certificate-chain: classpath:tls/server.crt
+      private-key: classpath:tls/server.key
