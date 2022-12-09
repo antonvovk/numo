@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    username: ${DATASOURCE_PROD_USER}
+    password: ${DATASOURCE_PROD_PASSWORD}
+    url: ${DATASOURCE_PROD_URL}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+cognito:
+  user-pool-id: ${COGNITO_PROD_USER_POOL_ID}
+  client-id: ${COGNITO_PROD_CLIENT_ID}
+  client-secret: ${COGNITO_PROD_CLIENT_SECRET}
+  issuer: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_PROD_USER_POOL_ID}
+  jwk: https://cognito-idp.eu-north-1.amazonaws.com/${COGNITO_PROD_USER_POOL_ID}/.well-known/jwks.json
+
+s3:
+  bucket-name: ${S3_PROD_BUCKET_NAME}
+  access-point-url: https://${S3_PROD_BUCKET_NAME}.s3.eu-north-1.amazonaws.com
