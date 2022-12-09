@@ -7,6 +7,7 @@ import com.numo.server.services.CognitoService;
 import com.numo.server.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmForgotPasswordRequest;
@@ -110,6 +111,28 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     @Override
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+        final Map<String, String> authParams = new HashMap<>();
+        authParams.put("REFRESH_TOKEN", request.getRefreshToken());
+        authParams.put("SECRET_HASH", calculateSecretHash(getCurrentUserEmail()));
+
+        final InitiateAuthRequest initiateAuthRequest = InitiateAuthRequest.builder()
+                .authFlow(AuthFlowType.REFRESH_TOKEN_AUTH)
+                .authParameters(authParams)
+                .clientId(properties.getClientId())
+                .build();
+
+        final InitiateAuthResponse response = client.initiateAuth(initiateAuthRequest);
+        log.info("InitiateAuthResponse: {}", response);
+        return RefreshTokenResponse.newBuilder()
+                .setAccessToken(response.authenticationResult().accessToken())
+                .setExpiresIn(response.authenticationResult().expiresIn())
+                .setTokenType(response.authenticationResult().tokenType())
+                .setRefreshToken(response.authenticationResult().refreshToken())
+                .build();
+    }
+
+    @Override
     public com.numo.proto.ForgotPasswordResponse forgotPassword(com.numo.proto.ForgotPasswordRequest request) {
         final ForgotPasswordRequest forgotPasswordRequest = ForgotPasswordRequest.builder()
                 .clientId(properties.getClientId())
@@ -139,8 +162,8 @@ public class CognitoServiceImpl implements CognitoService {
     public com.numo.proto.ChangePasswordResponse changePassword(com.numo.proto.ChangePasswordRequest request) {
         final ForgotPasswordRequest forgotPasswordRequest = ForgotPasswordRequest.builder()
                 .clientId(properties.getClientId())
-                .secretHash(calculateSecretHash(request.getEmail()))
-                .username(request.getEmail())
+                .secretHash(calculateSecretHash(getCurrentUserEmail()))
+                .username(getCurrentUserEmail())
                 .build();
         final ForgotPasswordResponse response = client.forgotPassword(forgotPasswordRequest);
         log.info("ForgotPasswordResponse: {}", response);
@@ -151,8 +174,8 @@ public class CognitoServiceImpl implements CognitoService {
     public ConfirmChangePasswordResponse confirmChangePassword(ConfirmChangePasswordRequest request) {
         final ConfirmForgotPasswordRequest confirmForgotPasswordRequest = ConfirmForgotPasswordRequest.builder()
                 .clientId(properties.getClientId())
-                .secretHash(calculateSecretHash(request.getEmail()))
-                .username(request.getEmail())
+                .secretHash(calculateSecretHash(getCurrentUserEmail()))
+                .username(getCurrentUserEmail())
                 .confirmationCode(request.getConfirmationCode())
                 .password(request.getNewPassword())
                 .build();
@@ -175,5 +198,10 @@ public class CognitoServiceImpl implements CognitoService {
             log.error("InvalidKeyException while calculating secret hash", e);
         }
         return null;
+    }
+
+    private String getCurrentUserEmail() {
+        final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.findEmailById(userId).orElseThrow();
     }
 }

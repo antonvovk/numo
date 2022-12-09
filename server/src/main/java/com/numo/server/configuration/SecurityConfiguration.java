@@ -32,6 +32,7 @@ public class SecurityConfiguration {
         source.set(AuthenticationServiceGrpc.getVerifyEmailMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getResendConfirmationCodeMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getSignInMethod(), AccessPredicate.permitAll());
+        source.set(AuthenticationServiceGrpc.getRefreshTokenMethod(), AccessPredicate.fullyAuthenticated());
         source.set(AuthenticationServiceGrpc.getForgotPasswordMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getConfirmForgotPasswordMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getChangePasswordMethod(), AccessPredicate.fullyAuthenticated());

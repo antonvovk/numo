@@ -12,6 +12,8 @@ public interface CognitoService {
 
     SignInResponse signIn(SignInRequest request);
 
+    RefreshTokenResponse refreshToken(RefreshTokenRequest request);
+
     ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request);
 
     ConfirmForgotPasswordResponse confirmForgotPassword(ConfirmForgotPasswordRequest request);

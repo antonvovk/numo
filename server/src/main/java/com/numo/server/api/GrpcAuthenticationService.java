@@ -37,6 +37,12 @@ public class GrpcAuthenticationService extends AuthenticationServiceGrpc.Authent
     }
 
     @Override
+    public void refreshToken(RefreshTokenRequest request, StreamObserver<RefreshTokenResponse> responseObserver) {
+        responseObserver.onNext(cognitoService.refreshToken(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void forgotPassword(ForgotPasswordRequest request, StreamObserver<ForgotPasswordResponse> responseObserver) {
         responseObserver.onNext(cognitoService.forgotPassword(request));
         responseObserver.onCompleted();

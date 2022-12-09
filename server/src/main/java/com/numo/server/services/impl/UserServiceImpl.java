@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email);
+    public Optional<String> findEmailById(String id) {
+        return repository.findEmailById(id);
     }
 
     @Override

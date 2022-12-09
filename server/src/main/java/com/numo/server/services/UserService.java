@@ -10,7 +10,7 @@ public interface UserService {
 
     Optional<User> findById(String id);
 
-    Optional<User> findByEmail(String email);
+    Optional<String> findEmailById(String id);
 
     User create(CreateUser request);
 
