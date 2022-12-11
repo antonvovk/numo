@@ -1,6 +1,8 @@
 package com.numo.server.services.impl;
 
 import com.numo.proto.*;
+import com.numo.server.db.entities.User;
+import com.numo.server.exceptions.EntityNotFoundException;
 import com.numo.server.models.CreateUser;
 import com.numo.server.properties.CognitoProperties;
 import com.numo.server.services.CognitoService;
@@ -202,6 +204,6 @@ public class CognitoServiceImpl implements CognitoService {
 
     private String getCurrentUserEmail() {
         final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findEmailById(userId).orElseThrow();
+        return userService.findEmailById(userId).orElseThrow(() -> EntityNotFoundException.of(userId, User.class));
     }
 }

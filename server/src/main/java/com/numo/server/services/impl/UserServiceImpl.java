@@ -2,6 +2,7 @@ package com.numo.server.services.impl;
 
 import com.numo.server.db.entities.User;
 import com.numo.server.db.repositories.UserRepository;
+import com.numo.server.exceptions.EntityNotFoundException;
 import com.numo.server.models.CreateUser;
 import com.numo.server.models.UpdateUser;
 import com.numo.server.services.StorageService;
@@ -41,7 +42,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User update(UpdateUser request) {
-        final User user = repository.findById(request.id()).orElseThrow();
+        final User user = repository.findById(request.id())
+                .orElseThrow(() -> EntityNotFoundException.of(request.id(), User.class));
         user.setName(request.name());
         user.setGender(request.gender());
         user.setAge(request.age());
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String changeProfileImage(String id, String imageType, byte[] image) {
-        final User user = repository.findById(id).orElseThrow();
+        final User user = repository.findById(id).orElseThrow(() -> EntityNotFoundException.of(id, User.class));
 
         final String filename = id + "." + imageType;
         final String profileImageUrl = storageService.putObject(filename, image);

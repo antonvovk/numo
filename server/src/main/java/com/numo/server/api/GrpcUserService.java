@@ -2,6 +2,7 @@ package com.numo.server.api;
 
 import com.numo.proto.*;
 import com.numo.server.db.entities.User;
+import com.numo.server.exceptions.EntityNotFoundException;
 import com.numo.server.mappers.UserMapper;
 import com.numo.server.models.UpdateUser;
 import com.numo.server.services.UserService;
@@ -20,7 +21,9 @@ public class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
     @Override
     public void getUser(GetUserRequest request, StreamObserver<GetUserResponse> responseObserver) {
         final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        userService.findById(userId).map(userMapper::mapToGetUserResponse).ifPresent(responseObserver::onNext);
+        final GetUserResponse user = userService.findById(userId).map(userMapper::mapToGetUserResponse)
+                .orElseThrow(() -> EntityNotFoundException.of(userId, User.class));
+        responseObserver.onNext(user);
         responseObserver.onCompleted();
     }
 
