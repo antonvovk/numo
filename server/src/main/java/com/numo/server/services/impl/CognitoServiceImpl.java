@@ -116,7 +116,7 @@ public class CognitoServiceImpl implements CognitoService {
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
         final Map<String, String> authParams = new HashMap<>();
         authParams.put("REFRESH_TOKEN", request.getRefreshToken());
-        authParams.put("SECRET_HASH", calculateSecretHash(getCurrentUserEmail()));
+        authParams.put("SECRET_HASH", calculateSecretHash(getCurrentUserId()));
 
         final InitiateAuthRequest initiateAuthRequest = InitiateAuthRequest.builder()
                 .authFlow(AuthFlowType.REFRESH_TOKEN_AUTH)
@@ -130,7 +130,7 @@ public class CognitoServiceImpl implements CognitoService {
                 .setAccessToken(response.authenticationResult().accessToken())
                 .setExpiresIn(response.authenticationResult().expiresIn())
                 .setTokenType(response.authenticationResult().tokenType())
-                .setRefreshToken(response.authenticationResult().refreshToken())
+                .setRefreshToken(request.getRefreshToken())
                 .build();
     }
 
@@ -203,7 +203,11 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     private String getCurrentUserEmail() {
-        final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String userId = getCurrentUserId();
         return userService.findEmailById(userId).orElseThrow(() -> EntityNotFoundException.of(userId, User.class));
+    }
+
+    private String getCurrentUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

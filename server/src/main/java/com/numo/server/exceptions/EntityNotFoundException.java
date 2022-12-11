@@ -10,6 +10,6 @@ public class EntityNotFoundException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Entity " + clazz.getSimpleName() + " with id " + id + " not found";
+        return "Entity " + clazz.getSimpleName() + " with id " + id + " not found.";
     }
 }
