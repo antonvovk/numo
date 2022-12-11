@@ -65,4 +65,10 @@ public class GrpcAuthenticationService extends AuthenticationServiceGrpc.Authent
         responseObserver.onNext(cognitoService.confirmChangePassword(request));
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void deleteUser(DeleteUserRequest request, StreamObserver<DeleteUserResponse> responseObserver) {
+        responseObserver.onNext(cognitoService.deleteUser(request));
+        responseObserver.onCompleted();
+    }
 }

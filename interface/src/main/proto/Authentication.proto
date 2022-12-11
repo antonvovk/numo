@@ -25,6 +25,8 @@ service AuthenticationService {
   }
   rpc ConfirmChangePassword (ConfirmChangePasswordRequest) returns (ConfirmChangePasswordResponse) {
   }
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {
+  }
 }
 
 message SignUpRequest {
@@ -101,4 +103,10 @@ message ConfirmChangePasswordRequest {
 }
 
 message ConfirmChangePasswordResponse {
+}
+
+message DeleteUserRequest {
+}
+
+message DeleteUserResponse {
 }

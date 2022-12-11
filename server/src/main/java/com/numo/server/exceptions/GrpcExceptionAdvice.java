@@ -42,4 +42,9 @@ public class GrpcExceptionAdvice {
     public Status handleExpiredCodeException(ExpiredCodeException e) {
         return Status.DEADLINE_EXCEEDED.withDescription(e.awsErrorDetails().errorMessage());
     }
+
+    @GrpcExceptionHandler(UserNotFoundException.class)
+    public Status handleUserNotFoundException(UserNotFoundException e) {
+        return Status.NOT_FOUND.withDescription(e.awsErrorDetails().errorMessage());
+    }
 }

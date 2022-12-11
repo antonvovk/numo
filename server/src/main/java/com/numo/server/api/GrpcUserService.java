@@ -9,7 +9,8 @@ import com.numo.server.services.UserService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.springframework.security.core.context.SecurityContextHolder;
+
+import static com.numo.server.utils.SecurityUtils.getCurrentUserId;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
 
     @Override
     public void getUser(GetUserRequest request, StreamObserver<GetUserResponse> responseObserver) {
-        final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String userId = getCurrentUserId();
         final GetUserResponse user = userService.findById(userId).map(userMapper::mapToGetUserResponse)
                 .orElseThrow(() -> EntityNotFoundException.of(userId, User.class));
         responseObserver.onNext(user);
@@ -29,7 +30,7 @@ public class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
 
     @Override
     public void updateUser(UpdateUserRequest request, StreamObserver<UpdateUserResponse> responseObserver) {
-        final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String userId = getCurrentUserId();
         final UpdateUser updateUserRequest = userMapper.mapToUpdateUser(request).toBuilder().id(userId).build();
         final User user = userService.update(updateUserRequest);
         responseObserver.onNext(userMapper.mapToUpdateUserResponse(user));
@@ -38,7 +39,7 @@ public class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
 
     @Override
     public void changeProfileImage(ChangeProfileImageRequest request, StreamObserver<ChangeProfileImageResponse> responseObserver) {
-        final String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String userId = getCurrentUserId();
         final String imageType = request.getMetadata().getType();
         final byte[] image = request.getFile().getContent().toByteArray();
 

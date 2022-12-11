@@ -21,4 +21,6 @@ public interface CognitoService {
     ChangePasswordResponse changePassword(ChangePasswordRequest request);
 
     ConfirmChangePasswordResponse confirmChangePassword(ConfirmChangePasswordRequest request);
+
+    DeleteUserResponse deleteUser(DeleteUserRequest request);
 }

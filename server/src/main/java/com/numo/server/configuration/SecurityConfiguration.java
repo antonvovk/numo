@@ -37,6 +37,7 @@ public class SecurityConfiguration {
         source.set(AuthenticationServiceGrpc.getConfirmForgotPasswordMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getChangePasswordMethod(), AccessPredicate.fullyAuthenticated());
         source.set(AuthenticationServiceGrpc.getConfirmChangePasswordMethod(), AccessPredicate.fullyAuthenticated());
+        source.set(AuthenticationServiceGrpc.getDeleteUserMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getGetUserMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getUpdateUserMethod(), AccessPredicate.fullyAuthenticated());
         source.set(UserServiceGrpc.getChangeProfileImageMethod(), AccessPredicate.fullyAuthenticated());

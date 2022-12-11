@@ -9,11 +9,12 @@ import com.numo.server.services.CognitoService;
 import com.numo.server.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmForgotPasswordRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmForgotPasswordResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.DeleteUserRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.DeleteUserResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ForgotPasswordRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ForgotPasswordResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ResendConfirmationCodeRequest;
@@ -30,6 +31,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.numo.server.utils.SecurityUtils.getCurrentAccessToken;
+import static com.numo.server.utils.SecurityUtils.getCurrentUserId;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
@@ -186,6 +189,16 @@ public class CognitoServiceImpl implements CognitoService {
         return com.numo.proto.ConfirmChangePasswordResponse.newBuilder().build();
     }
 
+    @Override
+    public com.numo.proto.DeleteUserResponse deleteUser(com.numo.proto.DeleteUserRequest request) {
+        final DeleteUserRequest deleteUserRequest = DeleteUserRequest.builder()
+                .accessToken(getCurrentAccessToken())
+                .build();
+        final DeleteUserResponse response = client.deleteUser(deleteUserRequest);
+        log.info("DeleteUserResponse: {}", response);
+        return com.numo.proto.DeleteUserResponse.newBuilder().build();
+    }
+
     private String calculateSecretHash(String username) {
         final SecretKeySpec key = new SecretKeySpec(properties.getClientSecret().getBytes(UTF_8), HMAC_SHA256_ALGORITHM);
         try {
@@ -205,9 +218,5 @@ public class CognitoServiceImpl implements CognitoService {
     private String getCurrentUserEmail() {
         final String userId = getCurrentUserId();
         return userService.findEmailById(userId).orElseThrow(() -> EntityNotFoundException.of(userId, User.class));
-    }
-
-    private String getCurrentUserId() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }
