@@ -63,4 +63,9 @@ public class UserServiceImpl implements UserService {
         user.setProfileImageUrl(profileImageUrl);
         return repository.save(user).getProfileImageUrl();
     }
+
+    @Override
+    public void delete(String id) {
+        repository.deleteById(id);
+    }
 }

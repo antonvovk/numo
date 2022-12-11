@@ -191,11 +191,14 @@ public class CognitoServiceImpl implements CognitoService {
 
     @Override
     public com.numo.proto.DeleteUserResponse deleteUser(com.numo.proto.DeleteUserRequest request) {
+        final String userId = getCurrentUserId();
         final DeleteUserRequest deleteUserRequest = DeleteUserRequest.builder()
                 .accessToken(getCurrentAccessToken())
                 .build();
         final DeleteUserResponse response = client.deleteUser(deleteUserRequest);
         log.info("DeleteUserResponse: {}", response);
+
+        userService.delete(userId);
         return com.numo.proto.DeleteUserResponse.newBuilder().build();
     }
 

@@ -17,4 +17,6 @@ public interface UserService {
     User update(UpdateUser request);
 
     String changeProfileImage(String id, String imageType, byte[] image);
+
+    void delete(String id);
 }
