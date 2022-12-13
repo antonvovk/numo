@@ -61,7 +61,18 @@ public class CognitoServiceImpl implements CognitoService {
                 .email(request.getEmail())
                 .build();
         userService.create(createUserRequest);
+
+        updateUserConfirmationStatus(request.getEmail());
         return signIn(request);
+    }
+
+    private void updateUserConfirmationStatus(String email) {
+        final AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
+                .userPoolId(properties.getUserPoolId())
+                .username(email)
+                .build();
+        client.adminConfirmSignUp(confirmSignUpRequest);
+        log.info("Successfully changed status of user with email {} to CONFIRMED", email);
     }
 
     @Override
@@ -72,10 +83,27 @@ public class CognitoServiceImpl implements CognitoService {
                 .secretHash(calculateSecretHash(getCurrentUserEmail()))
                 .confirmationCode(request.getConfirmationCode())
                 .build();
+        return tryVerifyEmail(confirmSignUpRequest);
+    }
 
-        final ConfirmSignUpResponse response = client.confirmSignUp(confirmSignUpRequest);
-        log.info("ConfirmSignUpResponse: {}", response);
+    private VerifyEmailResponse tryVerifyEmail(ConfirmSignUpRequest request) {
+        try {
+            client.confirmSignUp(request);
+        } catch (NotAuthorizedException e) {
+            log.info("Verification of email {} results in: {}", request.username(), e.awsErrorDetails().errorMessage());
+            confirmUserEmail(request.username());
+        }
         return VerifyEmailResponse.newBuilder().build();
+    }
+
+    private void confirmUserEmail(String email) {
+        final AdminUpdateUserAttributesRequest request = AdminUpdateUserAttributesRequest.builder()
+                .userPoolId(properties.getUserPoolId())
+                .userAttributes(AttributeType.builder().name("email_verified").value("true").build())
+                .username(email)
+                .build();
+        client.adminUpdateUserAttributes(request);
+        log.info("Successfully changed attribute email_verified to true for user with email {}", email);
     }
 
     @Override
