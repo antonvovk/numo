@@ -47,4 +47,9 @@ public class GrpcExceptionAdvice {
     public Status handleUserNotFoundException(UserNotFoundException e) {
         return Status.NOT_FOUND.withDescription(e.awsErrorDetails().errorMessage());
     }
+
+    @GrpcExceptionHandler(CodeMismatchException.class)
+    public Status handleCodeMismatchException(CodeMismatchException e) {
+        return Status.INVALID_ARGUMENT.withDescription(e.awsErrorDetails().errorMessage());
+    }
 }
