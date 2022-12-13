@@ -34,9 +34,11 @@ message SignUpRequest {
   string password = 2;
 }
 
+// shoud return token
 message SignUpResponse {
 }
 
+// replace email with token
 message VerifyEmailRequest {
   string email = 1;
   string confirmationCode = 2;
@@ -61,6 +63,7 @@ message RefreshTokenRequest {
   string refreshToken = 1;
 }
 
+// unify model
 message RefreshTokenResponse {
   string accessToken = 1;
   uint64 expiresIn = 2;
