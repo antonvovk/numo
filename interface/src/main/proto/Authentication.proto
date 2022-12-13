@@ -7,15 +7,15 @@ option java_package = "com.numo.proto";
 option java_outer_classname = "AuthenticationProto";
 
 service AuthenticationService {
-  rpc SignUp (SignUpRequest) returns (SignUpResponse) {
+  rpc SignUp (EmailAndPasswordRequest) returns (TokenResponse) {
   }
   rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
   }
   rpc ResendConfirmationCode (ResendConfirmationCodeRequest) returns (ResendConfirmationCodeResponse) {
   }
-  rpc SignIn (SignInRequest) returns (SignInResponse) {
+  rpc SignIn (EmailAndPasswordRequest) returns (TokenResponse) {
   }
-  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
+  rpc RefreshToken (RefreshTokenRequest) returns (TokenResponse) {
   }
   rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse) {
   }
@@ -29,18 +29,12 @@ service AuthenticationService {
   }
 }
 
-message SignUpRequest {
+message EmailAndPasswordRequest {
   string email = 1;
   string password = 2;
 }
 
-// shoud return token
-message SignUpResponse {
-}
-
-// replace email with token
 message VerifyEmailRequest {
-  string email = 1;
   string confirmationCode = 2;
 }
 
@@ -48,30 +42,16 @@ message VerifyEmailResponse {
 }
 
 message ResendConfirmationCodeRequest {
-  string email = 1;
 }
 
 message ResendConfirmationCodeResponse {
-}
-
-message SignInRequest {
-  string email = 1;
-  string password = 2;
 }
 
 message RefreshTokenRequest {
   string refreshToken = 1;
 }
 
-// unify model
-message RefreshTokenResponse {
-  string accessToken = 1;
-  uint64 expiresIn = 2;
-  string tokenType = 3;
-  string refreshToken = 4;
-}
-
-message SignInResponse {
+message TokenResponse {
   string accessToken = 1;
   uint64 expiresIn = 2;
   string tokenType = 3;

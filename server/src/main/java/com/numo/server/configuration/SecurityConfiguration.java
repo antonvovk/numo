@@ -29,8 +29,8 @@ public class SecurityConfiguration {
     GrpcSecurityMetadataSource grpcSecurityMetadataSource() {
         final ManualGrpcSecurityMetadataSource source = new ManualGrpcSecurityMetadataSource();
         source.set(AuthenticationServiceGrpc.getSignUpMethod(), AccessPredicate.permitAll());
-        source.set(AuthenticationServiceGrpc.getVerifyEmailMethod(), AccessPredicate.permitAll());
-        source.set(AuthenticationServiceGrpc.getResendConfirmationCodeMethod(), AccessPredicate.permitAll());
+        source.set(AuthenticationServiceGrpc.getVerifyEmailMethod(), AccessPredicate.fullyAuthenticated());
+        source.set(AuthenticationServiceGrpc.getResendConfirmationCodeMethod(), AccessPredicate.fullyAuthenticated());
         source.set(AuthenticationServiceGrpc.getSignInMethod(), AccessPredicate.permitAll());
         source.set(AuthenticationServiceGrpc.getRefreshTokenMethod(), AccessPredicate.fullyAuthenticated());
         source.set(AuthenticationServiceGrpc.getForgotPasswordMethod(), AccessPredicate.permitAll());

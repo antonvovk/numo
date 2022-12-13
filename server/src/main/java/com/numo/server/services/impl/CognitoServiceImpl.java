@@ -19,8 +19,6 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.ForgotPassw
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ForgotPasswordResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ResendConfirmationCodeRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ResendConfirmationCodeResponse;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 import javax.crypto.Mac;
@@ -47,7 +45,7 @@ public class CognitoServiceImpl implements CognitoService {
     private final UserService userService;
 
     @Override
-    public com.numo.proto.SignUpResponse signUp(com.numo.proto.SignUpRequest request) {
+    public TokenResponse signUp(EmailAndPasswordRequest request) {
         final SignUpRequest signUpRequest = SignUpRequest.builder()
                 .username(request.getEmail())
                 .clientId(properties.getClientId())
@@ -63,15 +61,15 @@ public class CognitoServiceImpl implements CognitoService {
                 .email(request.getEmail())
                 .build();
         userService.create(createUserRequest);
-        return com.numo.proto.SignUpResponse.newBuilder().build();
+        return signIn(request);
     }
 
     @Override
     public VerifyEmailResponse verifyEmail(VerifyEmailRequest request) {
         final ConfirmSignUpRequest confirmSignUpRequest = ConfirmSignUpRequest.builder()
-                .username(request.getEmail())
+                .username(getCurrentUserEmail())
                 .clientId(properties.getClientId())
-                .secretHash(calculateSecretHash(request.getEmail()))
+                .secretHash(calculateSecretHash(getCurrentUserEmail()))
                 .confirmationCode(request.getConfirmationCode())
                 .build();
 
@@ -84,8 +82,8 @@ public class CognitoServiceImpl implements CognitoService {
     public com.numo.proto.ResendConfirmationCodeResponse resendConfirmationCode(com.numo.proto.ResendConfirmationCodeRequest request) {
         final ResendConfirmationCodeRequest resendConfirmationCodeRequest = ResendConfirmationCodeRequest.builder()
                 .clientId(properties.getClientId())
-                .secretHash(calculateSecretHash(request.getEmail()))
-                .username(request.getEmail())
+                .secretHash(calculateSecretHash(getCurrentUserEmail()))
+                .username(getCurrentUserEmail())
                 .build();
         final ResendConfirmationCodeResponse response = client.resendConfirmationCode(resendConfirmationCodeRequest);
         log.info("ResendConfirmationCodeResponse: {}", response);
@@ -93,7 +91,7 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     @Override
-    public SignInResponse signIn(SignInRequest request) {
+    public TokenResponse signIn(EmailAndPasswordRequest request) {
         final Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", request.getEmail());
         authParams.put("PASSWORD", request.getPassword());
@@ -107,7 +105,7 @@ public class CognitoServiceImpl implements CognitoService {
 
         final InitiateAuthResponse response = client.initiateAuth(initiateAuthRequest);
         log.info("InitiateAuthResponse: {}", response);
-        return SignInResponse.newBuilder()
+        return TokenResponse.newBuilder()
                 .setAccessToken(response.authenticationResult().accessToken())
                 .setExpiresIn(response.authenticationResult().expiresIn())
                 .setTokenType(response.authenticationResult().tokenType())
@@ -116,7 +114,7 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     @Override
-    public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+    public TokenResponse refreshToken(RefreshTokenRequest request) {
         final Map<String, String> authParams = new HashMap<>();
         authParams.put("REFRESH_TOKEN", request.getRefreshToken());
         authParams.put("SECRET_HASH", calculateSecretHash(getCurrentUserId()));
@@ -129,7 +127,7 @@ public class CognitoServiceImpl implements CognitoService {
 
         final InitiateAuthResponse response = client.initiateAuth(initiateAuthRequest);
         log.info("InitiateAuthResponse: {}", response);
-        return RefreshTokenResponse.newBuilder()
+        return TokenResponse.newBuilder()
                 .setAccessToken(response.authenticationResult().accessToken())
                 .setExpiresIn(response.authenticationResult().expiresIn())
                 .setTokenType(response.authenticationResult().tokenType())

@@ -13,7 +13,7 @@ public class GrpcAuthenticationService extends AuthenticationServiceGrpc.Authent
     private final CognitoService cognitoService;
 
     @Override
-    public void signUp(SignUpRequest request, StreamObserver<SignUpResponse> responseObserver) {
+    public void signUp(EmailAndPasswordRequest request, StreamObserver<TokenResponse> responseObserver) {
         responseObserver.onNext(cognitoService.signUp(request));
         responseObserver.onCompleted();
     }
@@ -31,13 +31,13 @@ public class GrpcAuthenticationService extends AuthenticationServiceGrpc.Authent
     }
 
     @Override
-    public void signIn(SignInRequest request, StreamObserver<SignInResponse> responseObserver) {
+    public void signIn(EmailAndPasswordRequest request, StreamObserver<TokenResponse> responseObserver) {
         responseObserver.onNext(cognitoService.signIn(request));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void refreshToken(RefreshTokenRequest request, StreamObserver<RefreshTokenResponse> responseObserver) {
+    public void refreshToken(RefreshTokenRequest request, StreamObserver<TokenResponse> responseObserver) {
         responseObserver.onNext(cognitoService.refreshToken(request));
         responseObserver.onCompleted();
     }

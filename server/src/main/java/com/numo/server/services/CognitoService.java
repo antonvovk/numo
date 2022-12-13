@@ -4,15 +4,15 @@ import com.numo.proto.*;
 
 public interface CognitoService {
 
-    SignUpResponse signUp(SignUpRequest request);
+    TokenResponse signUp(EmailAndPasswordRequest request);
 
     VerifyEmailResponse verifyEmail(VerifyEmailRequest request);
 
     ResendConfirmationCodeResponse resendConfirmationCode(ResendConfirmationCodeRequest request);
 
-    SignInResponse signIn(SignInRequest request);
+    TokenResponse signIn(EmailAndPasswordRequest request);
 
-    RefreshTokenResponse refreshToken(RefreshTokenRequest request);
+    TokenResponse refreshToken(RefreshTokenRequest request);
 
     ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request);
 
