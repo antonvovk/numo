@@ -1,6 +1,10 @@
 package com.numo.server.exceptions;
 
+import com.numo.proto.ErrorCode;
+import io.grpc.Metadata;
+import io.grpc.Metadata.Key;
 import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.server.advice.GrpcAdvice;
 import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
@@ -8,48 +12,69 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 @GrpcAdvice
 public class GrpcExceptionAdvice {
 
-    @GrpcExceptionHandler(EntityNotFoundException.class)
-    public Status handleEntityNotFoundException(EntityNotFoundException e) {
-        return Status.NOT_FOUND.withDescription(e.getMessage());
+    @GrpcExceptionHandler(UserEntityNotFoundException.class)
+    public StatusRuntimeException handleUserEntityNotFoundException(UserEntityNotFoundException e) {
+        return Status.NOT_FOUND.withDescription(e.getMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
     }
 
     @GrpcExceptionHandler(InvalidParameterException.class)
-    public Status handleInvalidParameterException(InvalidParameterException e) {
-        return Status.INVALID_ARGUMENT.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleInvalidParameterException(InvalidParameterException e) {
+        return Status.INVALID_ARGUMENT.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
     }
 
     @GrpcExceptionHandler(NotAuthorizedException.class)
-    public Status handleNotAuthorizedException(NotAuthorizedException e) {
-        return Status.UNAUTHENTICATED.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleNotAuthorizedException(NotAuthorizedException e) {
+        return Status.UNAUTHENTICATED.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.INCORRECT_EMAIL_OR_PASSWORD));
     }
 
     @GrpcExceptionHandler(CodeDeliveryFailureException.class)
-    public Status handleCodeDeliveryFailureException(CodeDeliveryFailureException e) {
-        return Status.FAILED_PRECONDITION.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleCodeDeliveryFailureException(CodeDeliveryFailureException e) {
+        return Status.FAILED_PRECONDITION.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
+    }
+
+    @GrpcExceptionHandler(UserNotConfirmedException.class)
+    public StatusRuntimeException handleUserNotConfirmedException(UserNotConfirmedException e) {
+        return Status.FAILED_PRECONDITION.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
     }
 
     @GrpcExceptionHandler(UsernameExistsException.class)
-    public Status handleUsernameExistsException(UsernameExistsException e) {
-        return Status.ALREADY_EXISTS.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleUsernameExistsException(UsernameExistsException e) {
+        return Status.ALREADY_EXISTS.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.USER_WITH_THIS_EMAIL_ALREADY_EXISTS));
     }
 
     @GrpcExceptionHandler(InvalidPasswordException.class)
-    public Status handleInvalidPasswordException(InvalidPasswordException e) {
-        return Status.INVALID_ARGUMENT.withDescription(e.awsErrorDetails().errorMessage());
-    }
-
-    @GrpcExceptionHandler(ExpiredCodeException.class)
-    public Status handleExpiredCodeException(ExpiredCodeException e) {
-        return Status.DEADLINE_EXCEEDED.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleInvalidPasswordException(InvalidPasswordException e) {
+        return Status.UNAUTHENTICATED.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
     }
 
     @GrpcExceptionHandler(UserNotFoundException.class)
-    public Status handleUserNotFoundException(UserNotFoundException e) {
-        return Status.NOT_FOUND.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleUserNotFoundException(UserNotFoundException e) {
+        return Status.NOT_FOUND.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
+    }
+
+    @GrpcExceptionHandler(ExpiredCodeException.class)
+    public StatusRuntimeException handleExpiredCodeException(ExpiredCodeException e) {
+        return Status.DEADLINE_EXCEEDED.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.CONFIRMATION_CODE_EXPIRED));
     }
 
     @GrpcExceptionHandler(CodeMismatchException.class)
-    public Status handleCodeMismatchException(CodeMismatchException e) {
-        return Status.INVALID_ARGUMENT.withDescription(e.awsErrorDetails().errorMessage());
+    public StatusRuntimeException handleCodeMismatchException(CodeMismatchException e) {
+        return Status.UNAUTHENTICATED.withDescription(e.awsErrorDetails().errorMessage())
+                .asRuntimeException(metadata(ErrorCode.CONFIRMATION_CODE_MISMATCH));
+    }
+
+    private Metadata metadata(ErrorCode code) {
+        final Metadata metadata = new Metadata();
+        metadata.put(Key.of("error_code", Metadata.ASCII_STRING_MARSHALLER), code.toString());
+        return metadata;
     }
 }

@@ -5,8 +5,7 @@ import com.numo.proto.PhysicalFitness;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record UpdateUser(String id,
-                         String name,
+public record UpdateUser(String name,
                          Gender gender,
                          Integer age,
                          Integer weight,

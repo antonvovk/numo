@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.numo.proto;
+
+option java_multiple_files = true;
+option java_package = "com.numo.proto";
+option java_outer_classname = "ErrorProto";
+
+enum ErrorCode {
+  UNSPECIFIED = 0;
+  INCORRECT_EMAIL_OR_PASSWORD = 1;
+  USER_WITH_THIS_EMAIL_ALREADY_EXISTS = 2;
+  CONFIRMATION_CODE_EXPIRED = 3;
+  CONFIRMATION_CODE_MISMATCH = 4;
+}

@@ -2,7 +2,7 @@ package com.numo.server.services.impl;
 
 import com.numo.server.db.entities.User;
 import com.numo.server.db.repositories.UserRepository;
-import com.numo.server.exceptions.EntityNotFoundException;
+import com.numo.server.exceptions.UserEntityNotFoundException;
 import com.numo.server.models.CreateUser;
 import com.numo.server.models.UpdateUser;
 import com.numo.server.services.StorageService;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import static com.numo.server.utils.SecurityUtils.getCurrentUserId;
 
 @Service
 @RequiredArgsConstructor
@@ -22,14 +22,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findById(String id) {
-        return repository.findById(id);
+    public User getUser() {
+        final String id = getCurrentUserId();
+        return repository.findById(id).orElseThrow(() -> UserEntityNotFoundException.of(id));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<String> findEmailById(String id) {
-        return repository.findEmailById(id);
+    public String getUserEmail() {
+        final String id = getCurrentUserId();
+        return repository.findEmailById(id).orElseThrow(() -> UserEntityNotFoundException.of(id));
     }
 
     @Override
@@ -42,8 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User update(UpdateUser request) {
-        final User user = repository.findById(request.id())
-                .orElseThrow(() -> EntityNotFoundException.of(request.id(), User.class));
+        final User user = getUser();
         user.setName(request.name());
         user.setGender(request.gender());
         user.setAge(request.age());
@@ -54,10 +55,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String changeProfileImage(String id, String imageType, byte[] image) {
-        final User user = repository.findById(id).orElseThrow(() -> EntityNotFoundException.of(id, User.class));
+    public String changeProfileImage(String imageType, byte[] image) {
+        final User user = getUser();
 
-        final String filename = id + "." + imageType;
+        final String filename = user.getId() + "." + imageType;
         final String profileImageUrl = storageService.putObject(filename, image);
 
         user.setProfileImageUrl(profileImageUrl);
@@ -65,7 +66,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String id) {
-        repository.deleteById(id);
+    @Transactional
+    public void delete() {
+        repository.delete(getUser());
     }
 }
