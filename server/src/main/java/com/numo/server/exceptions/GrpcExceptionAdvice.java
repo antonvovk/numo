@@ -7,6 +7,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.server.advice.GrpcAdvice;
 import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
+import org.springframework.dao.DataIntegrityViolationException;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 @GrpcAdvice
@@ -15,6 +16,12 @@ public class GrpcExceptionAdvice {
     @GrpcExceptionHandler(UserEntityNotFoundException.class)
     public StatusRuntimeException handleUserEntityNotFoundException(UserEntityNotFoundException e) {
         return Status.NOT_FOUND.withDescription(e.getMessage())
+                .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
+    }
+
+    @GrpcExceptionHandler(DataIntegrityViolationException.class)
+    public StatusRuntimeException handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return Status.INTERNAL.withDescription(e.getMessage())
                 .asRuntimeException(metadata(ErrorCode.UNSPECIFIED));
     }
 
